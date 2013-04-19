@@ -1,0 +1,14 @@
+Depth = 256;
+Width = 32;
+Address_radix = HEX;
+Data_radix = HEX;
+
+Content
+Begin
+
+[00..FF]: 00000000;
+
+ 00 : 0707173;
+
+End;
+
