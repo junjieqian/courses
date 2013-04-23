@@ -1,0 +1,102 @@
+This file is used to explain the solution for project 1 of 
+CSCE 828.
+
+This file first tells you how to run this program (REtoDFA), then 
+describes how it works, and references (including how the references are used
+and the changes I made) are given at last.
+
+        Project 1 of CSCE 828
+      Junjie Qian, jqian@cse.unl.edu
+          Oct. 21, 2011
+
+1, How to run this program:
+The program is written in C++, so you should run with g++, 
+the steps should be follow,
+
+  1.1, you need to copy the test files to the folder;
+  1.2, run command "g++ main.cpp -o test", while "test" is the executable file;
+  1.3, run "./test", the screen will show "PLEASE INPUT THE TEST FILE NAME",
+       type the test file name, for example the txt file "q1.txt" is what you
+       want to test, just type "q1.txt" will be ok;
+  1.4, the results will show on the screen now.
+
+
+2, Second how this program work:
+Design steps can be divided as two steps: first translate the regular 
+expression (RE) to Minimum DFA, then use the minimum DFA to evaluate 
+the expressions.
+
+The translation and evaluation process will be,
+
+  2.1. Get the RE from	the input txtfile which is the first line of the file 
+      (void GetRegExp() in DFA.cpp);
+  2.2. Insert the and operation to the RE and print it out (void InsertCatNode 
+       () in DFA.cpp);
+  2.3  Translate the RE to POSTFIX style, this may need two stacks, one stores
+       the symbols and the other stores the operations, in this process, push 
+       and pop operations are needed while these two operations are defined in 
+       LinkedStack.H (this is included in DFA.cpp)(void RegExpToPost());
+  2.3. Translate to the NFA. This first need to get the edge number which is number
+       of symbols described in the RE, then use Thompson algorithm to construct the
+       NFA, after the NFA is gotten we need to put the states that linked with epsilon
+       together and compare these sets to make sure each one is not same as others
+       (void GetEdgeNumber(), void CompArray() and void ThompsonConstruction());
+  2.4. Translate to the DFA. As we have already got the NFA sets, we can make these 
+       sets as DFA states, and in this step we need to identify the finalstates, Dstates
+       and Dtran two tables are created for future use with void closure and void move
+       (void SubsetConstruction());
+  2.5. Get the minimum DFA.
+  2.6. Check whether the strings in the txt file are accepted by the RE. To be easier, in
+       this program, the txt are readed two times, first is input the RE and second are the
+       strings. void move is used to record the elements in the string move path, and the
+       compare the last position number of the string with the finalstates. (void check())
+
+3, References I used in this project
+During this project, I use google to get a lot of useful information including sample codes
+and algorithms, and I list them here to identify the sources. To explain I didnot copy these
+codes, I also stated the changes or improvements I made to these codes or algorithm.
+
+  3.1. http://www.pudn.com/downloads203/sourcecode/others/detail953986.html, given by Qiankun
+       Wang.
+       In this file, the author identified Regular expressions turn DFA and DFA state transition 
+       table to determine whether to accept the input string. 
+       The codes and algorithms I adopted from it include get the postfix of the input RE, some 
+       basic operation codes such as pop and push function which are also stardard function on the
+       internet.
+       The changes to the codes I adopted are, fisrt I identified the input RE is from the first 
+       line of a txt file instead of input directly; second the postfix function is simplified, which
+       means I use less stack size to store the data, this is also becaused the input RE size is already
+       defined; third same as the input RE, the input string method is also changed to read from 
+       txt file directly instead of read the input string; fourth I changed the check function, the previous
+       code made a mistake check which defines the finalstate is the last state of DFA, but the final state
+       should be accept by the DFA, the change I made is use pointer acceptstates(i) to check whether the 
+       string can be accepted by the DFA; there are also some other small changes done to the codes to make it run.
+  3.2. http://ezekiel.vancouver.wsu.edu/~cs317/archive/projects/grep/grep.pdf 
+       This file gives the Thompson construction algorithm. With the help of this algorithm, the 
+       NFA can be created from the RE. This only helps me know how to construct a NFA with RE.
+  3.3. http://www.pudn.com/downloads205/sourcecode/math/detail963235.html, given by csp.
+       This file described a program that can convert the DFA to minDFA [Table Filling Algorithm].
+       Although this code can not be executed, I still learned how to minize the DFA table and how to
+       construct the DFA from an NFA. I didnot use the codes from this file, but still I wrote this part
+       of codes based on his idea and program.
+  3.4.  http://www.cnblogs.com/JCSU/articles/1190685.html, from this I know how to read the data by line
+       in the txt file.
+  3.5. http://www3.sympatico.ca/dbiggar/FA.home.html, from this I got some idea that regular expression
+       matching using finite automate written in c++.
+  3.6. http://code.google.com/p/regexp/source/detail?r=2&path=/trunk/dfa.cpp and 
+       http://www.hackchina.com/en/r/201813/compile_work2.cpp__html and 
+       http://projectsseminar.blogspot.com/2011/06/regular-expression-to-dfa.html, from these I know some basic
+       idea how to write a c++ code to realize the functions.
+  3.7. During the project, I got a lot of help from others including how to compile C++ and how to
+       debug the codes, and also discussed with some of my friends about the codes writing/debugging
+       and algorithms used in this project.
+  3.8. Due to I read a lot of information through google during the project, including how to read data
+       from file, how to output data, how to push/pop data from stack and so on, it is impossible for me 
+       to list them all here and sometimes I got the identical information from different sites.
+       Although some parts of codes are adopted from the internet, I changed or improved them instead 
+       of copy/paste them directly.
+       But it is hard to promise the codes are definitely different from others, since in this project
+       some functions (such as pop/push functions, ThompsonConstruction and Subsetconstruction) are standard 
+       and widely spreaded on the internet which is easy for everyone to get. 
+       What I can promise is I totally understand the information I used in this project, and I present them
+       in my way.
